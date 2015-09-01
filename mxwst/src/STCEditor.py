@@ -224,10 +224,11 @@ class NewSTCEditor(stc.StyledTextCtrl):
         self.GetTopLevelParent().status_bar.SetStatusText("Line:%s   Col:%s" % (self.GetCurrentLine()+1, self.GetColumn(self.GetCurrentPos())), number=0)
         self.GetTopLevelParent().status_bar.SetStatusText("Length: %s Sel: %s" % (self.GetLength(), len(self.GetSelectedText())), number=1)
         
-        if curPage.GetModify():
-            self.Parent.SetPageTextColour(cur_idx, wx.Colour(20,20,250))
-        else:
-            self.Parent.SetPageTextColour(cur_idx, wx.Colour(0,0,0))         
+        if not self.isAppTab:
+            if curPage.GetModify():
+                self.Parent.SetPageTextColour(cur_idx, wx.Colour(20,20,250))
+            else:
+                self.Parent.SetPageTextColour(cur_idx, wx.Colour(0,0,0))         
         
     def onSendXML(self, event):
         self.GetTopLevelParent().main_panel.RESED_panel.sendXML2WS(None)
