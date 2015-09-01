@@ -322,6 +322,7 @@ class NewSTCEditor(stc.StyledTextCtrl):
                 fxml =fxml[:-1]
             
             curTabPanel.SetText(fxml)
+            self.updateLCInfo(event)
             
         except Exception as e:
             self.showMessage(e, True)
