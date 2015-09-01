@@ -265,7 +265,7 @@ class NewSTCEditor(stc.StyledTextCtrl):
         curTabPanel = tabs.GetCurrentPage()
         self.GetTopLevelParent().main_panel.RESED_panel.msgPn.html_win.SetPage("")
         try:
-            xml.dom.minidom.parseString(curTabPanel.GetText())
+            xml.dom.minidom.parseString(curTabPanel.GetText().encode('utf-8'))
         except Exception as e:
             #l,c = eval(((str(e)[str(e).index('line'):]).replace('line', '')).replace('column', ''))
             self.showMessage(e, True)           
@@ -281,7 +281,7 @@ class NewSTCEditor(stc.StyledTextCtrl):
         self.GetTopLevelParent().main_panel.RESED_panel.msgPn.html_win.SetPage("")
         tab_spaces = self.format_tab_spaces
         try:
-            xml.dom.minidom.parseString(curTabPanel.GetText())
+            xml.dom.minidom.parseString(curTabPanel.GetText().encode('utf-8'))
             fields = re.split('(<.*?>)',curTabPanel.GetText())
             level = 0
             fxml = ""
