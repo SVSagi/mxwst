@@ -259,7 +259,13 @@ class NewSTCEditor(stc.StyledTextCtrl):
         searchString = self.GetSelectedText()
         self.find =  xmlString.find(searchString, fAt, len( xmlString ) )
         return self.find
-                    
+    
+    def highlightErrorPos(self, eMsg):
+        lc = ((eMsg[eMsg.find('line '):]).replace('line ', '').replace('column ', '')).split(',')
+        #self.SetSelection( int(lc[0]), int(lc[1]) )
+        self.GotoLine(int(lc[0]))
+        self.LineUp()
+        
     def validateXML(self, event):
         tabs = self.parent.nb
         curTabPanel = tabs.GetCurrentPage()
@@ -267,6 +273,7 @@ class NewSTCEditor(stc.StyledTextCtrl):
         try:
             xml.dom.minidom.parseString(curTabPanel.GetText().encode('utf-8'))
         except Exception as e:
+            self.highlightErrorPos(str(e))
             #l,c = eval(((str(e)[str(e).index('line'):]).replace('line', '')).replace('column', ''))
             self.showMessage(e, True)           
             #aplgr.log("validateXML: "+str(traceback.format_exc()))
@@ -325,21 +332,21 @@ class NewSTCEditor(stc.StyledTextCtrl):
             self.updateLCInfo(event)
             
         except Exception as e:
+            self.highlightErrorPos(str(e))
             self.showMessage(e, True)
         
     
     def showMessage(self, msg, error=False):
-        msgr = self.Parent.Parent.tmsg 
-        if error:
-            if self.isAppTab:
-                msgr.showMsg(None, str(msg), "MSG_WARN")
-            else:
-                msgr.showMsg(None, str(msg), "MSG_WARN")
+        msgr = None
+        if self.isAppTab:
+            msgr = self.Parent.Parent.Parent.Parent.XMLED_panel.tmsg
         else:
-            if self.isAppTab:
-                msgr.showMsg(None, str(msg), "MSG_OK")
-            else:
-                msgr.showMsg(None, str(msg), "MSG_OK")            
+            msgr = self.Parent.Parent.tmsg 
+        
+        if error:
+            msgr.showMsg(None, str(msg), "MSG_WARN")
+        else:
+            msgr.showMsg(None, str(msg), "MSG_OK")            
                 
     def isFileModified(self):
         if(not os.path.isfile(self.filePath)):
