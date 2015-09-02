@@ -37,14 +37,13 @@ class NewSTCEditor(stc.StyledTextCtrl):
         self.SetLexer(stc.STC_LEX_XML)
         self.StyleSetForeground (stc.STC_H_TAG,  wx.Colour(0,0,150))
         self.StyleSetForeground (stc.STC_H_ATTRIBUTE,  wx.Colour(128,0,0))
-        self.StyleSetForeground (stc.STC_H_VALUE,  wx.Colour(0, 102, 0))
+        #self.StyleSetForeground (stc.STC_H_VALUE,  wx.Colour(0, 102, 0))
         self.StyleSetForeground (stc.STC_H_DOUBLESTRING,  wx.Colour(128,0,128))
         
-        #self.StyleSetSpec(stc.STC_H_VALUE,"bold")
         self.StyleSetSpec(stc.STC_STYLE_DEFAULT, "face:%(other)s,size:%(size1)d" % faces)
         self.StyleSetSpec(stc.STC_STYLE_LINENUMBER, "back:#C0C0C0,face:%(other)s,size:%(size2)d" % faces)
         
-        self.StyleSetSpec(stc.STC_H_DEFAULT,  "fore:#008A2E,normal,face:%(other)s,size:%(size)d" % faces) 
+        self.StyleSetSpec(stc.STC_H_DEFAULT,  "fore:#008A2E,normal,bold,face:%(other)s,size:%(size)d" % faces) 
 
         self.SetMargins(0,0)
         self.SetFoldFlags(16)
@@ -217,6 +216,7 @@ class NewSTCEditor(stc.StyledTextCtrl):
             self.Parent.Parent.GetSizer().Layout()
      
     def updateLCInfo(self, event):
+        
         curPage = self.parent.nb.GetCurrentPage()
         cur_idx = self.parent.nb.GetSelection()
         

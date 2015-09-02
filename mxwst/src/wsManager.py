@@ -16,6 +16,7 @@ class SoapManager():
         self.btPan = parent.main_panel.RESED_panel
         
         self.srvr = self.btPan.mea_url.GetValue()
+        self.srvc = self.btPan.mea_srvc.GetValue()
         self.timeout = self.btPan.reqPr.prop_value_timeout.GetValue()
         
         self.soap_start_tag = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:max="http://www.ibm.com/maximo"><soapenv:Header/><soapenv:Body>'
@@ -85,7 +86,7 @@ class SoapManager():
             
             self.btPan.nb.SetSelection(0)
             self.xmlPan.tmsg.showMsg(None, 'Response: '+str(self.statuscode)+" - "+str(self.statusmessage), "MSG_OK")
-            #self.onSendSuccess()
+            self.onSendSuccess()
         else:
             #self.btPanel.sendXML.SetLabel('Send')
             if(self.header.get('Content-Type').find('text/html')!=-1):
@@ -122,3 +123,32 @@ class SoapManager():
         except Exception as hse:
             self.btPan.nb.SetSelection(1)
             raise Exception('Error setting headers: '+str(hse))
+    
+    def onSendSuccess(self):
+        try:
+            import ConfigParser
+            from ast import literal_eval
+            config = ConfigParser.ConfigParser()
+            config.read("mxwst-userdb.cfg")
+            
+            if not config.has_section('user_data'):
+                config.add_section('user_data')
+            
+            saved_urls = config.get("user_data", "mea_urls")
+            saved_srvcs = config.get("user_data", "mea_services")
+            meaurls = literal_eval("("+saved_urls+")")
+            measrvc = literal_eval("("+saved_srvcs+")")
+            
+            if not self.srvr in meaurls:
+                config.set('user_data', 'mea_urls', "'"+self.srvr +"',\n"+ saved_urls)
+                
+            if not self.srvc in measrvc:
+                config.set('user_data', 'mea_services', "'"+self.srvc +"',\n"+ saved_srvcs)
+
+            with open("mxwst-userdb.cfg", 'wb') as configfile:
+                config.write(configfile)
+        
+        except ConfigParser.NoOptionError:
+            pass
+        except Exception:
+            pass
