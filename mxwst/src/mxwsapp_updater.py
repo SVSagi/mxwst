@@ -35,6 +35,9 @@ class AppUpdate():
         except Exception as e:
             self.get_update_fail = True
             aplgr.log('Error fetching update '+str(e))
+        
+        if self.parent.close_after_update:
+            self.parent.Destroy()
 
 
     def getUpdateValue(self, section, option):
