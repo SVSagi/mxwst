@@ -15,7 +15,7 @@ import applogger as al
 
 app_name = "MX WS Tester"
 app_version = "2.0"
-app_build = "5"
+app_build = "7"
 is_beta = True
 
 app_info_string = app_name +' v'+ app_version +' build'+ app_build + ( "beta" if (is_beta) else "") 
@@ -171,7 +171,7 @@ class XMLTabsPanel(wx.Panel):
     
     def closeTab(self, event, idx = -1):
         if idx == -1:
-            idx = self.nb.GetSelection()
+            idx = event.GetSelection()
             
         if idx == -1:
             return
@@ -194,23 +194,21 @@ class XMLTabsPanel(wx.Panel):
             tabG.SetSelection(0)
             self.closeTab(event, 0)
             
-    def closeOtherTabs(self, event, indx=-1):
+    def closeOtherTabs(self, event, indx):
         tabs = self.nb
-        if indx == -1:
-            curPage = tabs.GetCurrentPage()
+        curPage = tabs.GetPage(indx)
+
+        if curPage.filePath == "":
+            tab_label = self.nb.GetPageText(indx)
         else:
-            curPage = tabs.GetPage(indx)
-        
-        if indx == -1:        
-            tabs.RemovePage(tabs.GetSelection())
-            tabs.InsertPage(tabs.GetPageCount(), curPage, ntpath.basename(curPage.filePath))
-        else:
-            tabs.RemovePage(indx)
-            tabs.InsertPage(tabs.GetPageCount(), curPage, ntpath.basename(curPage.filePath))                
-            
-        while(tabs.GetPageCount() and tabs.GetPageCount()!=1):
+            tab_label =  ntpath.basename(curPage.filePath)            
+
+        tabs.RemovePage(indx)            
+        while(tabs.GetPageCount()!=0):
             tabs.SetSelection(0)
             self.closeTab(event, 0)
+                
+        tabs.InsertPage(0, curPage, tab_label)            
     
     def getBlankTabSeq(self):
         self.blank_file_tab_count+=1
