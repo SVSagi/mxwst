@@ -15,7 +15,7 @@ import applogger as al
 
 app_name = "MX WS Tester"
 app_version = "2.0"
-app_build = "8"
+app_build = "9"
 is_beta = True
 
 app_info_string = app_name +' v'+ app_version +' build'+ app_build + ( "beta" if (is_beta) else "") 
@@ -102,9 +102,9 @@ class XMLTabsPanel(wx.Panel):
 
         
         if tab.isFileModified():
-            FCDlg = wx.MessageDialog(None, 'File '+self.nb.GetPageText(idx)+' modified externally, reload changes?', 'File modified', wx.YES_NO | wx.ICON_QUESTION)
+            FCDlg = wx.MessageDialog(None, 'File '+self.nb.GetPageText(idx)+'was modified externally, reload file?', 'External modification', wx.YES_NO | wx.ICON_QUESTION)
             if(FCDlg.ShowModal() == wx.ID_YES):
-                self.nb.Parent.loadFile(tab.filePath)
+                self.nb.Parent.loadFile(tab.filePath, force=True)
     
     def saveXMLFile(self, event, idx = -1):
         if idx == -1:
@@ -227,13 +227,18 @@ class XMLTabsPanel(wx.Panel):
             fullFilePath=oFile.GetPath()
             self.loadFile(fullFilePath)
         
-    def loadFile(self, file_path):
+    def loadFile(self, file_path, force = False):
         if not os.path.isfile(file_path):
             self.tmsg.showMsg(None, 'File does not exist\n'+os.path.abspath(file_path), "MSG_WARN")
             return
+
         tabs = self.nb
+        
         (alreadyOpened,index) = self.isFileAlreadyOpened(None, os.path.abspath(file_path))
         if(alreadyOpened):
+            if force:
+                tabs.GetPage(index).LoadFile(file_path)
+            
             tabs.SetSelection(index)
             #self.qf_folder_path = os.path.dirname(file_path)
             return
@@ -297,6 +302,16 @@ class XMLTabsPanel(wx.Panel):
 
         return False, -1
     
+    def validateXML(self, event):
+        tabs = self.nb
+        curTab = tabs.GetCurrentPage()
+        curTab.validateXML(event)
+    
+    def formatXML(self, event):
+        tabs = self.nb
+        curTab = tabs.GetCurrentPage()
+        curTab.formatXML(event)
+        
     def startMacroRecord(self, event):
         tabs = self.nb
         curTab = tabs.GetCurrentPage()
@@ -310,7 +325,7 @@ class XMLTabsPanel(wx.Panel):
     def playRecMarco(self, event):
         tabs = self.nb
         curTab = tabs.GetCurrentPage()
-        curTab.PlayMacro()        
+        curTab.PlayMacro()
 
 class trsMessagePanel(wx.Panel):
     def __init__(self, parent):
@@ -548,9 +563,9 @@ class MainFrame(wx.Frame):
         searchMenu.AppendItem(wx.MenuItem(searchMenu, 23, '&Find\tF3'))
 
        
-        toolsMenu.AppendItem(wx.MenuItem(toolsMenu, 41, '&Validate XML\tAlt+V'))
-        toolsMenu.AppendItem(wx.MenuItem(toolsMenu, 42, '&Format XML\tAlt+F'))
-        toolsMenu.AppendItem(wx.MenuItem(toolsMenu, 43, '&Format Output XML\tAlt+G'))
+        toolsMenu.AppendItem(wx.MenuItem(toolsMenu, 41, '&Validate XML'))
+        toolsMenu.AppendItem(wx.MenuItem(toolsMenu, 42, '&Format XML'))
+        #toolsMenu.AppendItem(wx.MenuItem(toolsMenu, 43, '&Format Output XML'))
         #toolsMenu.AppendSubMenu(macroMenu, 'Macro')
         
         aboutMenu.AppendItem(wx.MenuItem(toolsMenu, 53, '&About'))
@@ -568,6 +583,10 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.xmlPan.closeTab, id=15)
         self.Bind(wx.EVT_MENU, self.xmlPan.closeAllTabs, id=16)
         self.Bind(wx.EVT_MENU, self.ExitApp, id=17)
+        
+        self.Bind(wx.EVT_MENU, self.xmlPan.validateXML, id=41)
+        self.Bind(wx.EVT_MENU, self.xmlPan.formatXML, id=42)
+        #self.Bind(wx.EVT_MENU, self.xmlPan.formatResponseXML, id=43)
         
         self.Bind(wx.EVT_MENU, self.toggleSearchPanel, id=22)
         
@@ -600,7 +619,7 @@ class MainFrame(wx.Frame):
         self.main_panel.XMLED_panel.closeAllTabs(event)
         if self.upd_thread != None:
             if self.upd_thread.isAlive():
-                self.HideWithEffect(wx.SHOW_EFFECT_BLEND, 300)
+                self.HideWithEffect(wx.SHOW_EFFECT_BLEND, 500)
                 self.close_after_update = True
                 return
         self.Destroy()
@@ -612,7 +631,7 @@ class MainFrame(wx.Frame):
         info.SetDescription('Test Maximo web services')
         info.SetCopyright('(C) 2012-2015 Sarraju V Sagi')
         info.SetWebSite('http://sourceforge.net/projects/pymxwst/')
-        info.SetLicence("This application is for internal purpose only. Please contact application owner for license.")
+        info.SetLicence("This application is for internal usage only. Please contact application owner for license.")
         info.AddDeveloper('Sarraju V Sagi')
         wx.AboutBox(info)
     
