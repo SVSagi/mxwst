@@ -89,8 +89,8 @@ class AppUpdate():
             from wx import Menu, MenuItem, EVT_MENU
             
             self.parent.update_ver = update_string + ("beta" if self.cur_app_isbeta else "")
-            self.parent.update_changes = update_changes
-            
+            self.parent.update_changes = ("\n".join(update_changes.split('\\n')))
+
             updateMenu = Menu()
             updateMenu.AppendItem(MenuItem(updateMenu, 300, 'Version '+update_string))
             self.parent.Bind(EVT_MENU, self.parent.showUpdate, id=300)  
