@@ -15,7 +15,7 @@ import applogger as al
 
 app_name = "MX WS Tester"
 app_version = "2.0"
-app_build = "7"
+app_build = "8"
 is_beta = True
 
 app_info_string = app_name +' v'+ app_version +' build'+ app_build + ( "beta" if (is_beta) else "") 
@@ -122,6 +122,7 @@ class XMLTabsPanel(wx.Panel):
             return
         
         curTab.SaveFile(curTab.filePath)
+        curTab.setFileProps(curTab.filePath)
         
     def saveAsFile(self, event, pageIndex=-1):
         tabG = self.nb
