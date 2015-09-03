@@ -15,7 +15,7 @@ import applogger as al
 
 app_name = "MX WS Tester"
 app_version = "2.0"
-app_build = "9"
+app_build = "10"
 is_beta = True
 
 app_info_string = app_name +' v'+ app_version +' build'+ app_build + ( "beta" if (is_beta) else "") 
@@ -290,8 +290,9 @@ class XMLTabsPanel(wx.Panel):
         open_indx = int( literal_eval(file_list)[1] )
 
         if open_indx >= 0 and open_indx+1 <= self.nb.GetPageCount() :
-            self.nb.SetSelection(int( literal_eval(file_list)[1] ))
-            self.nb.GetPage( int(literal_eval(file_list)[1]) ).updateLCInfo(None)
+            self.nb.SetSelection(open_indx)
+            self.nb.GetPage(open_indx).updateLCInfo(None)
+            self.GetTopLevelParent().SetTitle( self.nb.GetPage(open_indx).filePath+ " - "+app_info_string)
 
     def isFileAlreadyOpened(self, event, filepath):
         tabs = self.nb
