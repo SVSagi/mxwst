@@ -85,18 +85,19 @@ class SoapManager():
                 self.btPan.respE.formatXML(None)
             
             self.btPan.nb.SetSelection(0)
-            self.xmlPan.tmsg.showMsg(None, 'Response: '+str(self.statuscode)+" - "+str(self.statusmessage), "MSG_OK")
+            rmsg = str(self.getErrorMsg(result))
+            self.xmlPan.tmsg.showMsg(None, 'Response: '+str(self.statuscode)+" - "+str(self.statusmessage) +"\n"+ ( "" if rmsg=='None' else rmsg ), "MSG_OK")
             self.onSendSuccess()
         else:
             #self.btPanel.sendXML.SetLabel('Send')
             if(self.header.get('Content-Type').find('text/html')!=-1):
                 self.btPan.nb.SetSelection(1)
-                self.xmlPan.tmsg.showMsg(None, str(self.statuscode)+" - "+str(self.statusmessage), "MSGWARN")#SDlg = wx.MessageDialog(None, 'Error\n'+self.getErrorMsg(result), 'Response: '+str(self.statuscode)+" - "+str(self.statusmessage), wx.OK | wx.wx.ICON_ERROR)
+                self.xmlPan.tmsg.showMsg(None, str(self.statuscode)+" - "+str(self.statusmessage) +"\n"+ self.getErrorMsg(result), "MSGWARN")#SDlg = wx.MessageDialog(None, 'Error\n'+self.getErrorMsg(result), 'Response: '+str(self.statuscode)+" - "+str(self.statusmessage), wx.OK | wx.wx.ICON_ERROR)
                 self.btPan.msgPn.html_win.SetPage(result)
             else:
                 self.btPan.respE.SetText(result)
                 self.btPan.nb.SetSelection(0)
-                self.xmlPan.tmsg.showMsg(None, str(self.statuscode)+" - "+str(self.statusmessage), "MSGWARN")#SDlg = wx.MessageDialog(None, 'Error\n'+self.getErrorMsg(result), 'Response: '+str(self.statuscode)+" - "+str(self.statusmessage), wx.OK | wx.wx.ICON_ERROR)
+                self.xmlPan.tmsg.showMsg(None, str(self.statuscode)+" - "+str(self.statusmessage) +"\n"+ self.getErrorMsg(result), "MSGWARN")#SDlg = wx.MessageDialog(None, 'Error\n'+self.getErrorMsg(result), 'Response: '+str(self.statuscode)+" - "+str(self.statusmessage), wx.OK | wx.wx.ICON_ERROR)
                 #SDlg.ShowModal()
                 
     def getErrorMsg(self,error_xml):

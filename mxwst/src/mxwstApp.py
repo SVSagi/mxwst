@@ -15,7 +15,7 @@ import applogger as al
 
 app_name = "MX WS Tester"
 app_version = "2.0"
-app_build = "12"
+app_build = "13"
 is_beta = True
 
 app_info_string = app_name +' v'+ app_version +' build'+ app_build + ( "beta" if (is_beta) else "") 
@@ -334,18 +334,22 @@ class trsMessagePanel(wx.Panel):
         #print self.CanSetTransparent()
         #self.SetTransparent(80)
         self.resp_msg = wx.StaticText(self, -1, "No messages.", style = wx.ALIGN_CENTER)
-        self.resp_msg.Wrap(20)
+        #self.resp_msg.Wrap(10)
         self.closeMsg = wx.Button(self, label='Close')
         self.resp_img = self.GetTopLevelParent().getUIBitMap(self, "DEFAULT")
         mhs= wx.BoxSizer(wx.HORIZONTAL)
         mhs.Add(self.resp_img, 0)
         mhs.Add(self.resp_msg, 10)
-        mhs.Add(self.closeMsg, 1)
+        #mhs.Add(self.closeMsg, 0)
         self.SetSizer(mhs)
         self.Bind(wx.EVT_BUTTON, self.hideMsg, self.closeMsg)
     
     def showMsg(self, event, msg, code = None):
         self.resp_msg.SetLabel(msg)
+        wx.ToolTip.SetDelay(0)
+        #tt = wx.ToolTip(msg)
+        #tt.SetAutoPop(10000)
+        self.resp_msg.SetToolTip(wx.ToolTip(msg))
         self.resp_msg.Center()
         if not self.IsShown():
             self.Show()
