@@ -33,7 +33,7 @@ class SearchPanel(wx.Panel):
         self.sHB2.Add(self.findBtn)
         self.sHB2.Add(self.replaceBtn)
         self.sHB2.Add(self.replaceAllBtn)
-        #self.sHB2.Add(self.close_search)
+        self.sHB2.Add(self.close_search)
 
         self.sVB1= wx.BoxSizer(wx.VERTICAL)
 
@@ -45,16 +45,17 @@ class SearchPanel(wx.Panel):
         self.findBtn.Bind(wx.EVT_BUTTON, self.onFind)
         self.replaceBtn.Bind(wx.EVT_BUTTON, self.onReplace)
         self.replaceAllBtn.Bind(wx.EVT_BUTTON, self.onReplaceAll)
-        #self.close_search.Bind(wx.EVT_BUTTON, self.hideShowSearchPanel)
+        self.close_search.Bind(wx.EVT_BUTTON, self.hideShowSearchPanel)
 
     def hideShowSearchPanel(self, event):        
-        if self.Parent.searchPanel.IsShown():
-            self.Parent.VTBS2.Hide(self.Parent.searchPanel)
+        if self.Parent.searchPan.IsShown():
+            self.Parent.sizer.Hide(self.Parent.searchPan)
             self.Parent.GetSizer().Layout()
         else:
-            self.Parent.VTBS2.Show(self.Parent.searchPanel)
+            self.Parent.sizer.Show(self.Parent.searchPan)
             self.Parent.GetSizer().Layout()
             self.findString.SetFocus()
+            #wx.CallAfter(self.findString.SetFocus())
     
     def onFind(self, event):
         self.findText(event)

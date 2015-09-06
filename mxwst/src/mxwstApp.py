@@ -15,7 +15,7 @@ import applogger as al
 
 app_name = "MX WS Tester"
 app_version = "2.0"
-app_build = "13"
+app_build = "14"
 is_beta = True
 
 app_info_string = app_name +' v'+ app_version +' build'+ app_build + ( "beta" if (is_beta) else "") 
@@ -238,6 +238,7 @@ class XMLTabsPanel(wx.Panel):
         if(alreadyOpened):
             if force:
                 tabs.GetPage(index).LoadFile(file_path)
+                tabs.GetPage(index).setFileProps(os.path.abspath(file_path))
             
             tabs.SetSelection(index)
             #self.qf_folder_path = os.path.dirname(file_path)
