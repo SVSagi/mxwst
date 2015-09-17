@@ -96,8 +96,8 @@ class AppUpdate():
             self.parent.Bind(EVT_MENU, self.parent.showUpdate, id=300)  
             self.parent.menuBar.Append(updateMenu, "Update Available ")
             
-            if self.parent.close_after_update:
-                self.parent.Destroy()
+        if self.parent.close_after_update:
+            self.parent.Destroy()
 
 #up = AppUpdate(1, 1, True)
 #print up.notifyInApp()

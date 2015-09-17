@@ -15,7 +15,7 @@ import applogger as al
 
 app_name = "MX WS Tester"
 app_version = "2.0"
-app_build = "14"
+app_build = "15"
 is_beta = True
 
 app_info_string = app_name +' v'+ app_version +' build'+ app_build + ( "beta" if (is_beta) else "") 
@@ -173,6 +173,8 @@ class XMLTabsPanel(wx.Panel):
     def closeTab(self, event, idx = -1):
         if idx == -1:
             idx = event.GetSelection()
+            if idx == -1:
+                idx = self.nb.GetSelection()
             
         if idx == -1:
             return
