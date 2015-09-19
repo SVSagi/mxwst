@@ -54,8 +54,6 @@ class SearchPanel(wx.Panel):
         else:
             self.Parent.sizer.Show(self.Parent.searchPan)
             self.Parent.GetSizer().Layout()
-            self.findString.SetFocus()
-            #wx.CallAfter(self.findString.SetFocus())
     
     def onFind(self, event):
         self.findText(event)
@@ -142,7 +140,7 @@ class SearchPanel(wx.Panel):
         if self.find != -1:
             cur_editor.SetSelection(self.find, self.find+len( searchString ))
         else:
-            cur_editor.HideSelection(False)
+            cur_editor.HideSelection(True)
         
         if self.find == -1 and cur_editor.search_pos != -1:
             if wrapSearch:
