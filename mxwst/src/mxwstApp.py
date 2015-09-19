@@ -15,7 +15,7 @@ import applogger as al
 
 app_name = "MX WS Tester"
 app_version = "2.0"
-app_build = "16"
+app_build = "17"
 is_beta = True
 
 app_info_string = app_name +' v'+ app_version +' build'+ app_build + ( "beta" if (is_beta) else "") 
@@ -116,13 +116,16 @@ class XMLTabsPanel(wx.Panel):
             return
         
         if curTab.filePath == "":
-            self.saveAsFile(event, idx)
+            save = self.saveAsFile(event, idx)
+            if not save:
+                return
         
         if not curTab.GetModify():
             return
         
         curTab.SaveFile(curTab.filePath)
         curTab.setFileProps(curTab.filePath)
+        curTab.updateLCInfo(event)
         
     def saveAsFile(self, event, pageIndex=-1):
         tabG = self.nb
@@ -131,7 +134,7 @@ class XMLTabsPanel(wx.Panel):
             pageIndex = tabG.GetSelection()
         
         if pageIndex == -1:
-            return
+            return False
         
         saveAsFileTab = tabG.GetPage(pageIndex)
        
@@ -142,9 +145,13 @@ class XMLTabsPanel(wx.Panel):
             saveAsFileTab.SaveFile(saveAsPath)
             saveAsFileTab.setFileProps(os.path.abspath(saveAsPath))
             tabG.SetPageText(pageIndex, saveAsDlg.GetFilename())
+        else:
+            saveAsDlg.Destroy()
+            return False
 
         saveAsDlg.Destroy()
-        self.tabChanged(event)        
+        self.tabChanged(event)
+        return True       
             
     def canCloseTab(self, event, idx = -1):
         tab = self.nb.GetPage(idx)
@@ -163,7 +170,7 @@ class XMLTabsPanel(wx.Panel):
                 FCDlg.Destroy()
 
         elif tab.GetModify():
-                FCDlg = wx.MessageDialog(None, 'Save file: '+self.nb.GetPageText(idx), 'Unsaved changes', wx.YES_NO | wx.ICON_QUESTION)
+                FCDlg = wx.MessageDialog(None, 'Save file: '+self.nb.GetPageText(idx) +' ?', 'Unsaved changes', wx.YES_NO | wx.ICON_QUESTION)
                 #FCDlg.Center()
                 if(FCDlg.ShowModal() == wx.ID_YES):
                     tab.SaveFile(tab.filePath)
@@ -656,6 +663,7 @@ class MainFrame(wx.Frame):
             self.xmlPan.searchPan.Hide()
         else:
             self.xmlPan.searchPan.Show()
+            self.xmlPan.searchPan.findString.SetFocus()
             
         self.xmlPan.GetSizer().Layout()
 
