@@ -137,10 +137,12 @@ class SearchPanel(wx.Panel):
             cur_editor.search_pos = cur_editor.search_pos+len(searchString)
         else:
             cur_editor.search_pos = cur_editor.GetCurrentPos()
-        #print     cur_editor.search_pos, len( xmlString )
         self.find =  xmlString.find(searchString, cur_editor.search_pos, len( xmlString ) )
         
-        cur_editor.SetSelection(self.find, self.find+len( searchString ))
+        if self.find != -1:
+            cur_editor.SetSelection(self.find, self.find+len( searchString ))
+        else:
+            cur_editor.HideSelection(False)
         
         if self.find == -1 and cur_editor.search_pos != -1:
             if wrapSearch:
