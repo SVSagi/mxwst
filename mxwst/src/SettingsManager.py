@@ -11,7 +11,7 @@ aplgr = al.AppLogger("MXWST_Settings")
 
 class Settings():
     def __init__(self, parent):
-        self.props = {'app_height':'', 'app_width':'', 'app_pos_point':'', 'tabs_at_top':'','show_password':'', 'load_last_session_files':'', 'show_line_numbers':'', 'request_timeout':'', 'username':'', 'password':'', 'content-type':'', 'soapaction':'', 'soap_env_start':'', 'soap_env_end':'', 'format_response_xml':'', 'format_tab_spaces':'', 'check_for_update_onstart':'1', 'check_for_update_onstart':'' }
+        self.props = {'app_height':'', 'app_width':'', 'app_pos_point':'', 'tabs_at_top':'','show_password':'', 'load_last_session_files':'', 'show_line_numbers':'', 'request_timeout':'', 'username':'', 'password':'', 'content-type':'', 'soapaction':'', 'soap_env_start':'', 'soap_env_end':'', 'format_response_xml':'', 'format_tab_spaces':'', 'check_for_update_onstart':'1','notebook_current_theme':'AuiDefaultTabArt' }
         self.last_props = {'app_height':'', 'app_width':'', 'app_position_x':'', 'app_position_y':'', 'split_position':'', 'last_opened_files':'', 'mea_host_url':'', 'mea_service':'','use_authentication':''}
         self.parent = parent
     def loadSettings(self, settings_file = "mxwst-settings.cfg"):
@@ -102,7 +102,7 @@ class Settings():
                 config.write(configfile)
             
         except Exception as e:
-            aplgr.log('Error saving settings.\n'+e)
+            aplgr.log('Error saving settings.\n'+str(e))
             
     def getUserData(self, option, dataFile = "mxwst-userdb.cfg"):
         

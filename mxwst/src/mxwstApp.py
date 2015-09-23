@@ -15,7 +15,7 @@ import applogger as al
 
 app_name = "MX WS Tester"
 app_version = "2.0"
-app_build = "18"
+app_build = "19"
 is_beta = True
 
 app_info_string = app_name +' v'+ app_version +' build'+ app_build + ( "beta" if (is_beta) else "") 
@@ -59,7 +59,24 @@ class XMLTabsPanel(wx.Panel):
         self.sizer.Add(self.searchPan, 0, wx.EXPAND)
         self.SetSizer(self.sizer)
         self.tmsg.Hide()
-        #self.nb.SetArtProvider(aui.AuiSimpleTabArt())
+        
+        try:
+            tabArt = settings['notebook_current_theme']
+            
+            if tabArt == 'VC8TabArt':
+                self.nb.SetArtProvider(aui.VC8TabArt())
+            elif tabArt == 'AuiSimpleTabArt':
+                self.nb.SetArtProvider(aui.AuiSimpleTabArt())
+            elif tabArt == 'VC71TabArt':
+                self.nb.SetArtProvider(aui.VC71TabArt())
+            elif tabArt == 'FF2TabArt':
+                self.nb.SetArtProvider(aui.FF2TabArt())
+            elif tabArt == 'ChromeTabArt':
+                self.nb.SetArtProvider(aui.ChromeTabArt())
+            else:
+                self.nb.SetArtProvider(aui.AuiDefaultTabArt())
+        except Exception as tae:
+            aplgr.log(str(tae))        
         #self.nb.NotebookPreview(200)
     
     def showTabContextMenu(self, event):
