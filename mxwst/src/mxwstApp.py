@@ -15,7 +15,7 @@ import applogger as al
 
 app_name = "MX WS Tester"
 app_version = "2.0"
-app_build = "17"
+app_build = "18"
 is_beta = True
 
 app_info_string = app_name +' v'+ app_version +' build'+ app_build + ( "beta" if (is_beta) else "") 
@@ -423,6 +423,8 @@ class BottomPanel(wx.Panel):
 
         self.sendXML.Bind(wx.EVT_BUTTON, self.sendXML2WS)
         self.openFile.Bind(wx.EVT_BUTTON, self.openQuickFileMenu)
+        
+        self.use_auth.SetToolTip(wx.ToolTip("Use Authentication?"))
     
     def openQuickFileMenu(self, event):
         import fnmatch
