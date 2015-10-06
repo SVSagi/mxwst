@@ -140,8 +140,8 @@ class SearchPanel(wx.Panel):
         if self.find != -1:
             cur_editor.SetSelection(self.find, self.find+len( searchString ))
         else:
-            cur_editor.HideSelection(True)
-        
+            cur_editor.SetSelection(0,0)
+            
         if self.find == -1 and cur_editor.search_pos != -1:
             if wrapSearch:
                 cur_editor.search_pos = 0

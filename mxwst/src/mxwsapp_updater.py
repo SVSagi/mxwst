@@ -85,6 +85,9 @@ class AppUpdate():
         if bool(self.getUpdateValue("updates","notification")):
             self.notify_msg = self.getUpdateValue("updates","notification_msg")
 
+        if self.parent.close_after_update:
+            self.parent.Destroy()
+
         if update_string != "":
             from wx import Menu, MenuItem, EVT_MENU
             

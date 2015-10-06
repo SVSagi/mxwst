@@ -15,7 +15,7 @@ import applogger as al
 
 app_name = "MX WS Tester"
 app_version = "2.0"
-app_build = "19"
+app_build = "20"
 is_beta = True
 
 app_info_string = app_name +' v'+ app_version +' build'+ app_build + ( "beta" if (is_beta) else "") 
@@ -77,7 +77,6 @@ class XMLTabsPanel(wx.Panel):
                 self.nb.SetArtProvider(aui.AuiDefaultTabArt())
         except Exception as tae:
             aplgr.log(str(tae))        
-        #self.nb.NotebookPreview(200)
     
     def showTabContextMenu(self, event):
         tabCMenu = wx.Menu()
@@ -651,10 +650,10 @@ class MainFrame(wx.Frame):
     def ExitApp(self, event):
         setng.saveSettings()
         self.main_panel.XMLED_panel.closeAllTabs(event)
+        self.close_after_update = True
         if self.upd_thread != None:
-            if self.upd_thread.isAlive():
+            if self.upd_thread.is_alive():
                 self.HideWithEffect(wx.SHOW_EFFECT_BLEND, 500)
-                self.close_after_update = True
                 return
         self.Destroy()
     
